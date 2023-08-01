@@ -1,11 +1,15 @@
-import { Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
+@Entity()
 export class Order {
   @PrimaryGeneratedColumn()
   id: number;
 
   @Column()
-  bookId: string;
+  bookId: number;
+
+  @Column({ type: 'decimal', precision: 5, scale: 2 })
+  price: number;
 
   @Column()
   quantity: number;
@@ -14,5 +18,5 @@ export class Order {
   totalPrice: number;
 
   @Column({ type: 'decimal', precision: 5, scale: 2 })
-  discount: number;
+  discountRate: number;
 }

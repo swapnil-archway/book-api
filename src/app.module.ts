@@ -6,6 +6,7 @@ import { Book } from './books/entities/book.entity';
 import { BooksModule } from './books/books.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { OrdersModule } from './orders/orders.module';
+import { Order } from './orders/entities/order.entity';
 
 @Module({
   imports: [
@@ -19,7 +20,7 @@ import { OrdersModule } from './orders/orders.module';
         username: 'root',
         password: '',
         database: 'booksdb',
-        entities: [Book],
+        entities: [Book, Order],
         synchronize: true,
       }),
       inject: [ConfigService],

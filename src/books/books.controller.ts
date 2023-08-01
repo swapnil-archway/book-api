@@ -8,7 +8,7 @@ import {
   BadRequestException,
 } from '@nestjs/common';
 import { CreateBookDto } from './dto/create-book.dto';
-import { ApiTags, ApiBadRequestResponse } from '@nestjs/swagger';
+import { ApiTags } from '@nestjs/swagger';
 import { Book } from './entities/book.entity';
 import { BooksService, Paginated } from './books.service';
 import { GetBooksDto } from './dto/get-books.dto';
