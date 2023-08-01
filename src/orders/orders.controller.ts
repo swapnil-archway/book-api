@@ -8,9 +8,11 @@ export class OrdersController {
   constructor(private readonly ordersService: OrdersService) {}
 
   @Post()
-  create(@Body() createOrderDto: CreateOrderDto): Promise<Order | string> {
+  async create(
+    @Body() createOrderDto: CreateOrderDto,
+  ): Promise<Order | string> {
     try {
-      return this.ordersService.createOrder(createOrderDto);
+      return await this.ordersService.createOrder(createOrderDto);
     } catch (err) {
       throw new BadRequestException(err);
     }

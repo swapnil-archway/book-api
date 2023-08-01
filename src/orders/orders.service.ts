@@ -13,24 +13,23 @@ export class OrdersService {
     private readonly bookService: BooksService,
   ) {}
   async createOrder(createOrderDto: CreateOrderDto): Promise<Order | string> {
-    try {
-      const book = await this.bookService.findOneBook(createOrderDto.bookId);
-      if (book?.id) {
-        const discountedAmount =
-          book.price * createOrderDto.quantity * (book.discountRate / 100);
-        const order = {
-          discountRate: book.discountRate,
-          price: book.price,
-          quantity: createOrderDto.quantity,
-          totalPrice: book.price * createOrderDto.quantity - discountedAmount,
-          bookId: createOrderDto.bookId,
-        };
-        const createdOrder = this.orderRepository.create(order);
-        return this.orderRepository.save(createdOrder);
-      }
-      return 'No book found.';
-    } catch (error) {
-      throw error;
+    if (createOrderDto.quantity < 1) {
+      throw 'Quantity should be at least 1.';
     }
+    const book = await this.bookService.findOneBook(createOrderDto.bookId);
+    if (book?.id) {
+      const discountedAmount =
+        book.price * createOrderDto.quantity * (book.discountRate / 100);
+      const order = {
+        discountRate: book.discountRate,
+        price: book.price,
+        quantity: createOrderDto.quantity,
+        totalPrice: book.price * createOrderDto.quantity - discountedAmount,
+        bookId: createOrderDto.bookId,
+      };
+      const createdOrder = this.orderRepository.create(order);
+      return this.orderRepository.save(createdOrder);
+    }
+    throw 'No book found.';
   }
 }
