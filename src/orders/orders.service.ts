@@ -12,7 +12,7 @@ export class OrdersService {
     private readonly orderRepository: Repository<Order>,
     private readonly bookService: BooksService,
   ) {}
-  async createOrder(createOrderDto: CreateOrderDto) {
+  async createOrder(createOrderDto: CreateOrderDto): Promise<Order | string> {
     try {
       const book = await this.bookService.findOneBook(createOrderDto.bookId);
       if (book?.id) {
