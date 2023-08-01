@@ -5,6 +5,8 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, { cors: true });
 
+  app.enableCors();
+
   const options = new DocumentBuilder()
     .setTitle('Bookstore API')
     .setDescription('API for managing books in the bookstore')
