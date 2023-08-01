@@ -5,6 +5,18 @@ import { Book } from './entities/book.entity';
 import { CreateBookDto } from './dto/create-book.dto';
 import { GetBooksDto } from './dto/get-books.dto';
 
+export class Paginated {
+  data: Book[];
+
+  page: number;
+
+  limit: number;
+
+  total: number;
+
+  lastPage: number;
+}
+
 @Injectable()
 export class BooksService {
   constructor(
@@ -12,22 +24,38 @@ export class BooksService {
     private readonly bookRepository: Repository<Book>,
   ) {}
 
-  async getAllBooks(query: GetBooksDto): Promise<Book[]> {
-    const { page, limit } = query;
+  async getAllBooks(query: GetBooksDto): Promise<Paginated> {
     try {
+      const { page, limit } = query;
       const skip = (page - 1) * limit;
-      return this.bookRepository.find({
+
+      const [data, total] = await this.bookRepository.findAndCount({
         skip,
         take: limit,
       });
-    } catch (e) {
-      throw e;
+
+      const lastPage = Math.ceil(total / limit);
+      const finalData: Paginated = {
+        data,
+        page,
+        limit,
+        total,
+        lastPage,
+      };
+
+      return finalData;
+    } catch (err) {
+      throw err;
     }
   }
 
   async createBook(bookDto: CreateBookDto): Promise<Book> {
-    const book = this.bookRepository.create(bookDto);
-    return this.bookRepository.save(book);
+    try {
+      const book = this.bookRepository.create(bookDto);
+      return this.bookRepository.save(book);
+    } catch (error) {
+      throw error;
+    }
   }
 
   async findOneBook(id: number): Promise<Book | undefined> {

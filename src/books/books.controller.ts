@@ -10,7 +10,7 @@ import {
 import { CreateBookDto } from './dto/create-book.dto';
 import { ApiTags, ApiBadRequestResponse } from '@nestjs/swagger';
 import { Book } from './entities/book.entity';
-import { BooksService } from './books.service';
+import { BooksService, Paginated } from './books.service';
 import { GetBooksDto } from './dto/get-books.dto';
 
 @ApiTags('books')
@@ -27,7 +27,7 @@ export class BooksController {
       }),
     )
     query: GetBooksDto,
-  ): Promise<Book[]> {
+  ): Promise<Paginated> {
     try {
       query.limit = query.limit ? query.limit : 10;
       query.page = query.page ? query.page : 1;
@@ -38,14 +38,11 @@ export class BooksController {
   }
 
   @Post()
-  @ApiBadRequestResponse({ description: 'Bad Request' })
   async createBook(@Body() bookDto: CreateBookDto): Promise<Book> {
-    return this.bookService.createBook(bookDto);
-  }
-
-  @Post('/order')
-  @ApiBadRequestResponse({ description: 'Bad Request' })
-  async orderBook(@Body() bookDto: CreateBookDto): Promise<Book> {
-    return this.bookService.createBook(bookDto);
+    try {
+      return this.bookService.createBook(bookDto);
+    } catch (error) {
+      throw new BadRequestException(error);
+    }
   }
 }
